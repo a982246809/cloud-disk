@@ -1,0 +1,87 @@
+service core-api {
+	//@handler 是 go-zero 框架中的一个标签，用于指定处理 API 接口的服务类。
+	@handler UserLogin
+	post /user/login(LoginRequest) returns (LoginResponse)
+	
+	@handler UserDetail
+	post /user/detail(UserDetailRequest) returns (UserDetailResponse)
+	//邮箱
+	@handler MailCoedSendRegister
+	post /mail/code/send/register(MailCodeSendRequest) returns (MailCodeSendResponse)
+	//用户注册
+	@handler UserRegister
+	post /user/register(UserRegisterRequest) returns (UserRegisterResponse)
+	
+}
+
+//下面的路由:  请求最先到中间件 再去hander  logic
+@server(
+	middleware: Auth
+)
+service core-api{
+	//文件上传
+	@handler FileUpload
+	post /file/upload(FileUploadRequest) returns (FileUploadResponse)
+	
+	//用戶文件关联存储
+	@handler UserRepositorySave
+	post /user/repository/save(UserRepositorySaveRequest) returns (UserRepositorySaveResponse)
+}
+
+type UserRepositorySaveRequest {
+	ParentId string `json:"parentId"`
+	RepositoryIdentity string `json:"repositoryIdentity"`
+	Ext string `json:"ext"`
+	Name string `json:"name,optional"`
+}
+
+type UserRepositorySaveResponse {
+}
+
+type FileUploadRequest {
+	Hash string `json:"hash,optional"`
+	Name string `json:"name,optional"`
+	Ext  string `json:"ext,optional"`
+	Size int64  `json:"size,optional"`
+	Path string `json:"path,optional"`
+}
+
+type FileUploadResponse {
+	Identity string `json:"identity"`
+	Name     string `json:"name"`
+	Ext      string `json:"ext"`
+}
+
+type UserRegisterRequest {
+	Name     string `json:"name"`
+	Password string `json:"password"`
+	Email    string `json:"email"`
+	Code     string `json:"code"`
+}
+type UserRegisterResponse{}
+
+type LoginRequest {
+	// Name string `path:"name,options=you|me"`
+	Name     string `json:"name"`
+	Password string `json:"password"`
+}
+
+type LoginResponse {
+	Token string `json:"token"`
+}
+
+type UserDetailRequest {
+	// Name string `path:"name,options=you|me"`
+	Identity string `json:"identity"`
+}
+
+type UserDetailResponse {
+	Name  string `json:"name"`
+	Email string `json:"email"`
+}
+type MailCodeSendRequest {
+	Email string `json:"email"`
+}
+
+type MailCodeSendResponse {
+}
