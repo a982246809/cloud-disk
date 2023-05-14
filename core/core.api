@@ -29,10 +29,10 @@ service core-api{
 }
 
 type UserRepositorySaveRequest {
-	ParentId string `json:"parentId"`
+	ParentId           int64  `json:"parentId"`
 	RepositoryIdentity string `json:"repositoryIdentity"`
-	Ext string `json:"ext"`
-	Name string `json:"name,optional"`
+	Ext                string `json:"ext"`
+	Name               string `json:"name,optional"`
 }
 
 type UserRepositorySaveResponse {
